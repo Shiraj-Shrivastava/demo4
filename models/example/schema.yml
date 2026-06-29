@@ -1,0 +1,51 @@
+
+version: 2
+
+models:
+  - name: my_first_dbt_model
+    description: "A starter dbt model"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: my_second_dbt_model
+    description: "A starter dbt model"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+          - is_positive
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 5
+                max_value: 10
+
+  - name: customers
+    config:
+      materialized: table
+      alias: transformed_customers
+
+  - name: customers2
+    config:
+      materialized: view
+      alias: transformed_customers_2
+
+  - name: city_details
+    columns:
+      - name: cityid
+        tests:
+          - unique
+          - not_null
+
+sources:
+  - name: customers_raw
+    schema: staging
+    description: customers raw data
+    tables:
+    - name: customers
+
